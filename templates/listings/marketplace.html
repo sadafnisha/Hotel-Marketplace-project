@@ -1,66 +1,360 @@
 {% extends 'base.html' %}
 {% load humanize badges %}
+
 {% block title %}Hotel Marketplace &mdash; HotelLease{% endblock %}
+
 {% block content %}
+
+<!-- HERO -->
 <div class="hero-section mb-4">
-    <h1 class="fw-bold">Find your next hotel lease opportunity</h1>
-    <p class="mb-0">Browse verified hotel leasing listings from owners across the country.</p>
+    <h1 class="fw-bold typewriter-title">
+        <span id="typewriter-text"></span><span class="typewriter-cursor">|</span>
+    </h1>
+
+    <p class="mb-0">
+        Browse verified hotel leasing listings from owners across the country.
+    </p>
 </div>
 
-<form method="get" class="row g-2 mb-4 bg-white p-3 rounded-3 shadow-sm">
-    <div class="col-md-3">{{ form.q }}</div>
-    <div class="col-md-2">{{ form.city }}</div>
-    <div class="col-md-2">{{ form.property_type }}</div>
-    <div class="col-md-1">{{ form.min_price }}</div>
-    <div class="col-md-1">{{ form.max_price }}</div>
-    <div class="col-md-1">{{ form.min_rooms }}</div>
-    <div class="col-md-1">{{ form.sort }}</div>
-    <div class="col-md-1"><button class="btn btn-brand w-100">Go</button></div>
+
+<!-- SEARCH / FILTER BAR -->
+<form
+    method="get"
+    action="{% url 'listings:marketplace' %}"
+    class="marketplace-search row g-2 mb-4 bg-white p-3 rounded-3 shadow-sm"
+>
+
+    <div class="col-md-3">
+        {{ form.q }}
+    </div>
+
+    <div class="col-md-2">
+        {{ form.city }}
+    </div>
+
+    <div class="col-md-2">
+        {{ form.property_type }}
+    </div>
+
+    <div class="col-md-1">
+        {{ form.min_price }}
+    </div>
+
+    <div class="col-md-1">
+        {{ form.max_price }}
+    </div>
+
+    <div class="col-md-1">
+        {{ form.min_rooms }}
+    </div>
+
+    <div class="col-md-1">
+        {{ form.sort }}
+    </div>
+
+    <div class="col-md-1">
+        <button type="submit" class="btn btn-brand w-100">
+            <i class="bi bi-search"></i>
+            Go
+        </button>
+    </div>
+
 </form>
 
+
+<!-- RESULTS COUNT -->
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="section-title mb-0">{{ page_obj.paginator.count }} listing{{ page_obj.paginator.count|pluralize }} found</h4>
+    <h4 class="section-title mb-0">
+        {{ page_obj.paginator.count }}
+        listing{{ page_obj.paginator.count|pluralize }}
+        found
+    </h4>
 </div>
 
+
+<!-- LISTINGS -->
 <div class="row g-4">
+
     {% for listing in page_obj %}
+
     <div class="col-md-4">
+
         <div class="card hotel-card">
+
             {% if listing.cover_image %}
-                <img src="{{ listing.cover_image }}" class="card-img-top" alt="{{ listing.title }}">
+
+                <img
+                    src="{{ listing.cover_image }}"
+                    class="card-img-top"
+                    alt="{{ listing.title }}"
+                >
+
             {% else %}
-                <div class="placeholder-img">🏨</div>
-            {% endif %}
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <h5 class="card-title mb-1">{{ listing.title }}</h5>
-                    {% if listing.pk in favourite_ids %}<span title="Saved">⭐</span>{% endif %}
+
+                <div class="placeholder-img">
+                    🏨
                 </div>
-                <p class="text-muted small mb-2">📍 {{ listing.city }}, {{ listing.state }}</p>
-                <p class="mb-1"><strong>₹{{ listing.asking_amount|intcomma }}</strong> asking</p>
-                <p class="text-muted small mb-2">{{ listing.rooms }} rooms &middot; {{ listing.get_property_type_display }}</p>
-                <a href="{% url 'listings:detail' listing.pk %}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+
+            {% endif %}
+
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <h5 class="card-title mb-1">
+                        {{ listing.title }}
+                    </h5>
+
+                    {% if listing.pk in favourite_ids %}
+                        <span title="Saved">⭐</span>
+                    {% endif %}
+
+                </div>
+
+
+                <p class="text-muted small mb-2">
+                    📍 {{ listing.city }}, {{ listing.state }}
+                </p>
+
+
+                <p class="mb-1">
+                    <strong>
+                        ₹{{ listing.asking_amount|intcomma }}
+                    </strong>
+                    asking
+                </p>
+
+
+                <p class="text-muted small mb-2">
+                    {{ listing.rooms }} rooms
+                    &middot;
+                    {{ listing.get_property_type_display }}
+                </p>
+
+
+                <a
+                    href="{% url 'listings:detail' listing.pk %}"
+                    class="btn btn-outline-primary btn-sm w-100"
+                >
+                    View Details
+                </a>
+
             </div>
+
         </div>
+
     </div>
+
+
     {% empty %}
+
     <div class="col-12 text-center text-muted py-5">
-        <p class="fs-5">No listings match your search right now.</p>
+
+        <p class="fs-5">
+            No listings match your search right now.
+        </p>
+
     </div>
+
     {% endfor %}
+
 </div>
 
+
+<!-- PAGINATION -->
 {% if page_obj.paginator.num_pages > 1 %}
+
 <nav class="mt-4">
+
     <ul class="pagination justify-content-center">
+
         {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="?page={{ page_obj.previous_page_number }}"
+            >
+                Previous
+            </a>
+
+        </li>
+
         {% endif %}
-        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+
+        <li class="page-item disabled">
+
+            <span class="page-link">
+                Page {{ page_obj.number }}
+                of
+                {{ page_obj.paginator.num_pages }}
+            </span>
+
+        </li>
+
+
         {% if page_obj.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="?page={{ page_obj.next_page_number }}"
+            >
+                Next
+            </a>
+
+        </li>
+
         {% endif %}
+
     </ul>
+
 </nav>
+
 {% endif %}
+
+
+<!-- TYPEWRITER + SEARCH UI -->
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================
+       TYPEWRITER EFFECT
+    ========================= */
+
+    const text = "Find your next hotel lease opportunity";
+    const element = document.getElementById("typewriter-text");
+
+    let index = 0;
+    let deleting = false;
+
+    function typeWriter() {
+
+        if (!deleting) {
+
+            element.textContent = text.substring(0, index + 1);
+            index++;
+
+            if (index === text.length) {
+
+                setTimeout(() => {
+                    deleting = true;
+                    typeWriter();
+                }, 2200);
+
+                return;
+            }
+
+            setTimeout(typeWriter, 70);
+
+        } else {
+
+            element.textContent = text.substring(0, index - 1);
+            index--;
+
+            if (index === 0) {
+
+                deleting = false;
+
+                setTimeout(typeWriter, 500);
+
+                return;
+            }
+
+            setTimeout(typeWriter, 40);
+        }
+    }
+
+    typeWriter();
+
+
+    /* =========================
+       SEARCH PLACEHOLDERS
+    ========================= */
+
+    const placeholders = {
+        "id_q": "Search hotel name...",
+        "id_city": "City",
+        "id_min_price": "Min price",
+        "id_max_price": "Max price",
+        "id_min_rooms": "Min rooms"
+    };
+
+    Object.keys(placeholders).forEach(function (id) {
+
+        const input = document.getElementById(id);
+
+        if (input) {
+            input.setAttribute(
+                "placeholder",
+                placeholders[id]
+            );
+        }
+
+    });
+
+});
+</script>
+
+<style>
+
+.typewriter-title {
+    min-height: 1.2em;
+}
+
+.typewriter-cursor {
+    display: inline-block;
+    margin-left: 3px;
+    animation: blinkCursor 0.8s infinite;
+}
+
+@keyframes blinkCursor {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+
+}
+
+
+/* SEARCH BAR */
+
+.marketplace-search input,
+.marketplace-search select {
+    height: 48px;
+    border-radius: 8px;
+    border: 1px solid #d9dee5;
+    padding: 0 12px;
+    width: 100%;
+}
+
+.marketplace-search input:focus,
+.marketplace-search select:focus {
+    border-color: #d7aa3d;
+    box-shadow: 0 0 0 0.2rem rgba(215, 170, 61, 0.15);
+    outline: none;
+}
+
+.marketplace-search button {
+    height: 48px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+</style>
+
+{% endblock %}
+
 {% endblock %}
