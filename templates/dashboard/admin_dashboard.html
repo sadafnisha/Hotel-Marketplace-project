@@ -1,0 +1,515 @@
+{% extends 'base.html' %}
+{% load humanize badges static %}
+
+{% block title %}Admin Dashboard &mdash; HotelLease{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     DASHBOARD HEADER
+========================= -->
+
+<div class="dashboard-header">
+    <div class="dashboard-welcome">
+        <div class="small text-muted mb-1">HotelLease Administration</div>
+        <h2>Admin Dashboard 👋</h2>
+        <p>Monitor listings, users, offers and marketplace activity.</p>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{% url 'dashboard:admin_listings' %}" class="btn btn-brand">
+            + Manage Listings
+        </a>
+
+        <a href="{% url 'dashboard:admin_users' %}" class="btn btn-outline-brand">
+            Manage Users
+        </a>
+    </div>
+</div>
+
+
+<!-- =========================
+     STATISTICS
+========================= -->
+
+<div class="row g-3 mb-4">
+
+    <!-- Owners -->
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="dashboard-stat-icon">
+                    👤
+                </div>
+            </div>
+
+            <div class="dashboard-stat-label">
+                Total Owners
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.total_owners }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Registered owners
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Buyers -->
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="dashboard-stat-icon">
+                    🧑‍💼
+                </div>
+            </div>
+
+            <div class="dashboard-stat-label">
+                Total Buyers
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.total_buyers }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Active marketplace users
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Listings -->
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="dashboard-stat-icon">
+                    🏨
+                </div>
+            </div>
+
+            <div class="dashboard-stat-label">
+                Total Listings
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.total_listings }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Hotel opportunities
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Offers -->
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="dashboard-stat-icon">
+                    💰
+                </div>
+            </div>
+
+            <div class="dashboard-stat-label">
+                Total Offers
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.total_offers }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Marketplace offers
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     LISTING STATUS
+========================= -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100">
+            <div class="d-flex justify-content-between">
+                <span class="text-muted small">Published</span>
+                <span class="badge badge-published">Live</span>
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.published }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100">
+            <div class="d-flex justify-content-between">
+                <span class="text-muted small">Pending</span>
+                <span class="badge badge-pending">Review</span>
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.pending }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100">
+            <div class="d-flex justify-content-between">
+                <span class="text-muted small">Rejected</span>
+                <span class="badge badge-rejected">Rejected</span>
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.rejected }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100">
+            <div class="d-flex justify-content-between">
+                <span class="text-muted small">Closed</span>
+                <span class="badge badge-closed">Closed</span>
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.closed }}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     QUICK ACTIONS
+========================= -->
+
+<div class="card p-3 mb-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+        <div>
+            <h5 class="section-title mb-1">
+                Quick Actions
+            </h5>
+
+            <div class="text-muted small">
+                Manage your marketplace from one place.
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            <a href="{% url 'dashboard:admin_listings' %}"
+               class="btn btn-sm btn-outline-brand">
+                🏨 Manage Listings
+            </a>
+
+            <a href="{% url 'dashboard:admin_users' %}"
+               class="btn btn-sm btn-outline-brand">
+                👥 Manage Users
+            </a>
+
+            <a href="/django-admin/"
+               class="btn btn-sm btn-outline-secondary">
+                ⚙ Django Admin
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PENDING APPROVALS
+========================= -->
+
+<div class="card hotel-card p-0 mb-4">
+
+    <div class="p-4 border-bottom">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+            <div>
+                <h5 class="section-title mb-1">
+                    Listings Pending Approval
+                </h5>
+
+                <p class="text-muted small mb-0">
+                    Review and moderate recently submitted hotel listings.
+                </p>
+            </div>
+
+            {% if pending_listings %}
+                <span class="badge badge-pending">
+                    <span data-pending-count>{{ pending_listings|length }}</span> Pending
+                </span>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table mb-0 align-middle">
+
+            <thead>
+                <tr>
+                    <th class="ps-4">Hotel</th>
+                    <th>Owner</th>
+                    <th>City</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for l in pending_listings %}
+
+                <tr data-listing-row data-status="{{ l.status }}">
+
+                    <td class="ps-4">
+
+                        <a href="{% url 'listings:detail' l.pk %}"
+                           class="fw-semibold text-decoration-none"
+                           style="color: var(--brand-navy);">
+
+                            {{ l.title }}
+
+                        </a>
+
+                        <div class="small text-muted">
+                            Listing #{{ l.pk }}
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        <span class="text-muted">
+                            {{ l.owner.username }}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <span class="badge bg-light text-dark border">
+                            📍 {{ l.city }}
+                        </span>
+                    </td>
+
+
+                    <td class="text-end pe-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <button type="button" class="btn btn-sm btn-success js-moderate-btn"
+                                    data-scope="pending-widget" data-listing-id="{{ l.pk }}"
+                                    data-action="approve">
+                                ✓ Approve
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-outline-danger js-moderate-btn"
+                                    data-scope="pending-widget" data-listing-id="{{ l.pk }}"
+                                    data-action="reject">
+                                ✕ Reject
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+                    <td colspan="4" class="text-center py-5">
+
+                        <div style="font-size: 2rem;">
+                            ✓
+                        </div>
+
+                        <div class="fw-semibold mt-2">
+                            Everything is up to date
+                        </div>
+
+                        <div class="text-muted small">
+                            There are no listings waiting for approval.
+                        </div>
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     RECENT ACTIVITY
+========================= -->
+
+<div class="row g-4">
+
+    <!-- Recent Users -->
+
+    <div class="col-lg-6">
+
+        <div class="card hotel-card p-0 h-100">
+
+            <div class="p-4 border-bottom">
+
+                <h5 class="section-title mb-1">
+                    Recent Registrations
+                </h5>
+
+                <div class="text-muted small">
+                    Recently registered marketplace users.
+                </div>
+
+            </div>
+
+
+            <div class="p-3">
+
+                {% for u in recent_users %}
+
+                    <div class="activity-item">
+
+                        <div class="activity-dot"></div>
+
+                        <div class="flex-grow-1">
+
+                            <div class="d-flex justify-content-between align-items-center gap-2">
+
+                                <span class="fw-semibold">
+                                    {{ u.username }}
+                                </span>
+
+                                <span class="badge bg-light text-dark border">
+                                    {{ u.get_role_display }}
+                                </span>
+
+                            </div>
+
+                            <div class="activity-time mt-1">
+                                New user registration
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="text-center text-muted py-4">
+                        No recent registrations.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Recent Offers -->
+
+    <div class="col-lg-6">
+
+        <div class="card hotel-card p-0 h-100">
+
+            <div class="p-4 border-bottom">
+
+                <h5 class="section-title mb-1">
+                    Recent Offers
+                </h5>
+
+                <div class="text-muted small">
+                    Latest activity from buyers and investors.
+                </div>
+
+            </div>
+
+
+            <div class="p-3">
+
+                {% for o in recent_offers %}
+
+                    <div class="activity-item">
+
+                        <div class="activity-dot"></div>
+
+                        <div class="flex-grow-1">
+
+                            <div class="fw-semibold">
+                                {{ o.listing.title }}
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+
+                                <span class="text-muted small">
+                                    Offer: ₹{{ o.amount|intcomma }}
+                                </span>
+
+                                <span class="badge {{ o.status|offer_badge_class }}">
+                                    {{ o.get_status_display }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="text-center text-muted py-4">
+                        No recent offers.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/api-utils.js' %}"></script>
+<script src="{% static 'js/admin-approve.js' %}"></script>
+{% endblock %}

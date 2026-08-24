@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load humanize badges %}
+{% block title %}Hotel Marketplace &mdash; HotelLease{% endblock %}
+{% block content %}
+<div class="hero-section mb-4">
+    <h1 class="fw-bold">Find your next hotel lease opportunity</h1>
+    <p class="mb-0">Browse verified hotel leasing listings from owners across the country.</p>
+</div>
+
+<form method="get" class="row g-2 mb-4 bg-white p-3 rounded-3 shadow-sm">
+    <div class="col-md-3">{{ form.q }}</div>
+    <div class="col-md-2">{{ form.city }}</div>
+    <div class="col-md-2">{{ form.property_type }}</div>
+    <div class="col-md-1">{{ form.min_price }}</div>
+    <div class="col-md-1">{{ form.max_price }}</div>
+    <div class="col-md-1">{{ form.min_rooms }}</div>
+    <div class="col-md-1">{{ form.sort }}</div>
+    <div class="col-md-1"><button class="btn btn-brand w-100">Go</button></div>
+</form>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="section-title mb-0">{{ page_obj.paginator.count }} listing{{ page_obj.paginator.count|pluralize }} found</h4>
+</div>
+
+<div class="row g-4">
+    {% for listing in page_obj %}
+    <div class="col-md-4">
+        <div class="card hotel-card">
+            {% if listing.cover_image %}
+                <img src="{{ listing.cover_image }}" class="card-img-top" alt="{{ listing.title }}">
+            {% else %}
+                <div class="placeholder-img">🏨</div>
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1">{{ listing.title }}</h5>
+                    {% if listing.pk in favourite_ids %}<span title="Saved">⭐</span>{% endif %}
+                </div>
+                <p class="text-muted small mb-2">📍 {{ listing.city }}, {{ listing.state }}</p>
+                <p class="mb-1"><strong>₹{{ listing.asking_amount|intcomma }}</strong> asking</p>
+                <p class="text-muted small mb-2">{{ listing.rooms }} rooms &middot; {{ listing.get_property_type_display }}</p>
+                <a href="{% url 'listings:detail' listing.pk %}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center text-muted py-5">
+        <p class="fs-5">No listings match your search right now.</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

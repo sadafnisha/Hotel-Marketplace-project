@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load humanize badges static %}
+{% block title %}Manage Listings &mdash; Admin{% endblock %}
+{% block content %}
+<h3 class="section-title mb-4">Hotel Listings Management</h3>
+<div class="mb-3">
+    <a href="{% url 'dashboard:admin_listings' %}" class="btn btn-sm {% if not current_status %}btn-brand{% else %}btn-outline-secondary{% endif %}">All</a>
+    {% for value, label in statuses %}
+    <a href="?status={{ value }}" class="btn btn-sm {% if current_status == value %}btn-brand{% else %}btn-outline-secondary{% endif %}">{{ label }}</a>
+    {% endfor %}
+</div>
+<div class="table-responsive">
+<table class="table table-hover bg-white rounded shadow-sm align-middle">
+<thead><tr><th>Hotel</th><th>Owner</th><th>City</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+<tbody>
+{% for l in listings %}
+<tr data-listing-row data-status="{{ l.status }}">
+    <td><a href="{% url 'listings:detail' l.pk %}">{{ l.title }}</a></td>
+    <td>{{ l.owner.username }}</td>
+    <td>{{ l.city }}</td>
+    <td><span class="badge {{ l.status|status_badge_class }}" data-status-badge>{{ l.get_status_display }}</span></td>
+    <td>{{ l.created_at|date:"d M Y" }}</td>
+    <td>
+        <button type="button" class="btn btn-sm btn-success js-moderate-btn"
+                data-scope="table" data-listing-id="{{ l.pk }}" data-action="approve"
+                data-filter-status="{{ current_status }}"
+                {% if l.status == 'published' %}disabled{% endif %}>Approve</button>
+        <button type="button" class="btn btn-sm btn-outline-danger js-moderate-btn"
+                data-scope="table" data-listing-id="{{ l.pk }}" data-action="reject"
+                data-filter-status="{{ current_status }}"
+                {% if l.status == 'rejected' %}disabled{% endif %}>Reject</button>
+        <button type="button" class="btn btn-sm btn-outline-dark js-moderate-btn"
+                data-scope="table" data-listing-id="{{ l.pk }}" data-action="suspend"
+                data-filter-status="{{ current_status }}"
+                {% if l.status == 'closed' %}disabled{% endif %}>Suspend</button>
+    </td>
+</tr>
+{% empty %}<tr><td colspan="6" class="text-center text-muted py-4">No listings found.</td></tr>{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/api-utils.js' %}"></script>
+<script src="{% static 'js/admin-approve.js' %}"></script>
+{% endblock %}

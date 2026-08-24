@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load humanize badges %}
+{% block title %}Offers Received &mdash; HotelLease{% endblock %}
+{% block content %}
+<h3 class="section-title mb-4">Offers Received</h3>
+<div class="table-responsive">
+<table class="table table-hover bg-white rounded shadow-sm align-middle">
+<thead><tr><th>Hotel</th><th>Buyer</th><th>Amount</th><th>Status</th><th>Submitted</th><th></th></tr></thead>
+<tbody>
+{% for offer in offers %}
+<tr>
+    <td>{{ offer.listing.title }}</td>
+    <td>{{ offer.buyer.get_full_name|default:offer.buyer.username }}</td>
+    <td>₹{{ offer.amount|intcomma }}</td>
+    <td><span class="badge {{ offer.status|offer_badge_class }}">{{ offer.get_status_display }}</span></td>
+    <td>{{ offer.created_at|date:"d M Y" }}</td>
+    <td><a href="{% url 'offers:detail' offer.pk %}" class="btn btn-sm btn-outline-primary">Review</a></td>
+</tr>
+{% empty %}
+<tr><td colspan="6" class="text-center text-muted py-4">No offers received yet.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for c in conversations %}
+<a href="{% url 'chat:conversation' c.pk %}" class="list-group-item list-group-item-action">
+    <div class="d-flex justify-content-between">
+        <div>
+            <strong>{{ c.listing.title }}</strong>
+            <div class="text-muted small">
+                {% if user == c.buyer %}
+                    Owner: {{ c.owner.get_full_name|default:c.owner.username }}
+                {% else %}
+                    Buyer: {{ c.buyer.get_full_name|default:c.buyer.username }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="text-end">
+            {% if c.unread_count %}
+                <span class="badge bg-danger rounded-pill">
+                    {{ c.unread_count }}
+                </span>
+            {% endif %}
+
+            <div class="text-muted small">
+                {{ c.updated_at|date:"d M, H:i" }}
+            </div>
+        </div>
+    </div>
+</a>
+
+{% empty %}
+<div class="text-center text-muted py-5">
+    No conversations yet.
+</div>
+{% endfor %}
+
+{% endblock %}

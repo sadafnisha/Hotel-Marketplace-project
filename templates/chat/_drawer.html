@@ -1,0 +1,50 @@
+{% load static %}
+<script>window.CURRENT_USER_ID = {{ user.id }};</script>
+<!-- =========================================================
+     CHAT DRAWER (floating, available on every page once logged in)
+========================================================= -->
+<button id="chatDrawerToggle" class="chat-drawer-fab" type="button" aria-label="Open messages">
+    <i class="bi bi-chat-dots-fill"></i>
+    <span id="chatDrawerBadge" class="chat-drawer-fab-badge d-none">0</span>
+</button>
+
+<div id="chatDrawer" class="chat-drawer" aria-hidden="true">
+
+    <!-- ===== Conversation list view ===== -->
+    <div id="chatDrawerList" class="chat-drawer-pane">
+        <div class="chat-drawer-header">
+            <strong><i class="bi bi-chat-dots-fill"></i> Messages</strong>
+            <button type="button" class="chat-drawer-close" data-close-drawer aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div id="chatDrawerConversations" class="chat-drawer-body chat-drawer-conversations">
+            <div class="chat-drawer-empty text-muted small">Loading conversations…</div>
+        </div>
+    </div>
+
+    <!-- ===== Thread view ===== -->
+    <div id="chatDrawerThread" class="chat-drawer-pane d-none">
+        <div class="chat-drawer-header">
+            <button type="button" class="chat-drawer-back" data-back-to-list aria-label="Back">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <div class="flex-grow-1">
+                <strong id="chatDrawerThreadName">&nbsp;</strong>
+                <div id="chatDrawerThreadListing" class="small text-muted"></div>
+            </div>
+            <button type="button" class="chat-drawer-close" data-close-drawer aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div id="chatDrawerMessages" class="chat-drawer-body chat-drawer-messages"></div>
+        <form id="chatDrawerForm" class="chat-drawer-composer">
+            <input id="chatDrawerInput" type="text" placeholder="Type a message…" autocomplete="off" maxlength="4000">
+            <button type="submit" aria-label="Send"><i class="bi bi-send-fill"></i></button>
+        </form>
+    </div>
+
+</div>
+
+<script src="{% static 'js/api-utils.js' %}"></script>
+<script src="{% static 'js/chat-drawer.js' %}"></script>

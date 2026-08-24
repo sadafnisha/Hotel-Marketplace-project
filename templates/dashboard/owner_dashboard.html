@@ -1,0 +1,518 @@
+{% extends 'base.html' %}
+{% load humanize badges %}
+
+{% block title %}Owner Dashboard &mdash; HotelLease{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="dashboard-header">
+
+    <div class="dashboard-welcome">
+        <div class="small text-muted mb-1">
+            HotelLease Owner Portal
+        </div>
+
+        <h2>
+            Owner Dashboard 👋
+        </h2>
+
+        <p>
+            Manage your hotel listings, inquiries and offers from one place.
+        </p>
+    </div>
+
+    <a href="{% url 'listings:create' %}" class="btn btn-brand">
+        + Create New Listing
+    </a>
+
+</div>
+
+
+<!-- =========================
+     MAIN STATS
+========================= -->
+
+<div class="row g-3 mb-4">
+
+    <!-- Total Listings -->
+
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+
+            <div class="dashboard-stat-icon">
+                🏨
+            </div>
+
+            <div class="dashboard-stat-label">
+                Total Listings
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.total_listings }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Your hotel properties
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Published -->
+
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+
+            <div class="dashboard-stat-icon">
+                ✓
+            </div>
+
+            <div class="dashboard-stat-label">
+                Published
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.published }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Currently visible
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Inquiries -->
+
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+
+            <div class="dashboard-stat-icon">
+                💬
+            </div>
+
+            <div class="dashboard-stat-label">
+                Inquiries
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.total_inquiries }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Buyer interest
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Active Offers -->
+
+    <div class="col-6 col-xl-3">
+        <div class="dashboard-stat">
+
+            <div class="dashboard-stat-icon">
+                💰
+            </div>
+
+            <div class="dashboard-stat-label">
+                Active Offers
+            </div>
+
+            <div class="dashboard-stat-number">
+                {{ stats.active_offers }}
+            </div>
+
+            <div class="dashboard-stat-change">
+                Need your attention
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     OFFER SUMMARY
+========================= -->
+
+<div class="row g-3 mb-4">
+
+    <!-- Draft / Pending -->
+
+    <div class="col-6 col-md-3">
+
+        <div class="stat-card p-3 h-100">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <span class="text-muted small">
+                    Draft / Pending
+                </span>
+
+                <span class="badge badge-pending">
+                    Review
+                </span>
+
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.draft_pending }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Accepted -->
+
+    <div class="col-6 col-md-3">
+
+        <div class="stat-card p-3 h-100">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <span class="text-muted small">
+                    Accepted Offers
+                </span>
+
+                <span class="badge badge-accepted">
+                    Accepted
+                </span>
+
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.accepted_offers }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Countered -->
+
+    <div class="col-6 col-md-3">
+
+        <div class="stat-card p-3 h-100">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <span class="text-muted small">
+                    Countered
+                </span>
+
+                <span class="badge badge-countered">
+                    Negotiation
+                </span>
+
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.countered_offers }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Rejected -->
+
+    <div class="col-6 col-md-3">
+
+        <div class="stat-card p-3 h-100">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <span class="text-muted small">
+                    Rejected
+                </span>
+
+                <span class="badge badge-rejected">
+                    Closed
+                </span>
+
+            </div>
+
+            <div class="stat-number mt-2">
+                {{ stats.rejected_offers }}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     QUICK ACTIONS
+========================= -->
+
+<div class="card p-3 mb-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+        <div>
+
+            <h5 class="section-title mb-1">
+                Quick Actions
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Quickly manage your marketplace activity.
+            </p>
+
+        </div>
+
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            <a href="{% url 'listings:create' %}"
+               class="btn btn-brand btn-sm">
+                + New Listing
+            </a>
+
+            <a href="{% url 'listings:my_listings' %}"
+               class="btn btn-outline-brand btn-sm">
+                🏨 My Listings
+            </a>
+
+            <a href="{% url 'offers:received' %}"
+               class="btn btn-outline-brand btn-sm">
+                💰 Review Offers
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     RECENT ACTIVITY
+========================= -->
+
+<div class="row g-4">
+
+
+    <!-- =====================
+         RECENT LISTINGS
+    ====================== -->
+
+    <div class="col-lg-6">
+
+        <div class="card hotel-card p-0 h-100">
+
+            <div class="p-4 border-bottom">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h5 class="section-title mb-1">
+                            Recent Listings
+                        </h5>
+
+                        <p class="text-muted small mb-0">
+                            Your latest hotel listings.
+                        </p>
+
+                    </div>
+
+                    <a href="{% url 'listings:my_listings' %}"
+                       class="small fw-semibold"
+                       style="color: var(--brand-gold);">
+                        View All →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-3">
+
+                {% for l in listings %}
+
+                    <div class="activity-item">
+
+                        <div class="activity-dot"></div>
+
+                        <div class="flex-grow-1">
+
+                            <div class="d-flex justify-content-between align-items-center gap-2">
+
+                                <a href="{% url 'listings:detail' l.pk %}"
+                                   class="fw-semibold text-decoration-none"
+                                   style="color: var(--brand-navy);">
+
+                                    {{ l.title }}
+
+                                </a>
+
+                                <span class="badge {{ l.status|status_badge_class }}">
+                                    {{ l.get_status_display }}
+                                </span>
+
+                            </div>
+
+                            <div class="activity-time mt-1">
+                                Hotel listing
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="text-center py-5">
+
+                        <div style="font-size: 2.2rem;">
+                            🏨
+                        </div>
+
+                        <div class="fw-semibold mt-2">
+                            No listings yet
+                        </div>
+
+                        <div class="text-muted small mb-3">
+                            Create your first hotel listing to get started.
+                        </div>
+
+                        <a href="{% url 'listings:create' %}"
+                           class="btn btn-brand btn-sm">
+                            + Create Listing
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================
+         RECENT OFFERS
+    ====================== -->
+
+    <div class="col-lg-6">
+
+        <div class="card hotel-card p-0 h-100">
+
+            <div class="p-4 border-bottom">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h5 class="section-title mb-1">
+                            Recent Offers
+                        </h5>
+
+                        <p class="text-muted small mb-0">
+                            Latest offers from buyers.
+                        </p>
+
+                    </div>
+
+                    <a href="{% url 'offers:received' %}"
+                       class="small fw-semibold"
+                       style="color: var(--brand-gold);">
+                        View All →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-3">
+
+                {% for o in offers %}
+
+                    <div class="activity-item">
+
+                        <div class="activity-dot"></div>
+
+                        <div class="flex-grow-1">
+
+                            <div class="d-flex justify-content-between align-items-center gap-2">
+
+                                <a href="{% url 'offers:detail' o.pk %}"
+                                   class="fw-semibold text-decoration-none"
+                                   style="color: var(--brand-navy);">
+
+                                    {{ o.listing.title }}
+
+                                </a>
+
+                                <span class="badge {{ o.status|offer_badge_class }}">
+                                    {{ o.get_status_display }}
+                                </span>
+
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+
+                                <span class="text-muted small">
+                                    Buyer offer
+                                </span>
+
+                                <strong style="color: var(--brand-navy);">
+                                    ₹{{ o.amount|intcomma }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="text-center py-5">
+
+                        <div style="font-size: 2.2rem;">
+                            💰
+                        </div>
+
+                        <div class="fw-semibold mt-2">
+                            No offers yet
+                        </div>
+
+                        <div class="text-muted small">
+                            Offers from interested buyers will appear here.
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

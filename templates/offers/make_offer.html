@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Make an Offer &mdash; {{ listing.title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card hotel-card p-4">
+            <h4 class="section-title">Make an Offer</h4>
+            <p class="text-muted">{{ listing.title }} &middot; {{ listing.city }} &middot; Asking ₹{{ listing.asking_amount|intcomma }}</p>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-brand w-100">Submit Offer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

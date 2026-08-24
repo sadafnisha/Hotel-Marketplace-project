@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Conversation &mdash; {{ conversation.listing.title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card hotel-card p-4">
+            <h5 class="section-title mb-0">{{ conversation.listing.title }}</h5>
+            <p class="text-muted small">Conversation with {{ other_party.get_full_name|default:other_party.username }} &middot; <a href="{% url 'listings:detail' conversation.listing.pk %}">View listing</a></p>
+            <hr>
+            <div class="d-flex flex-column" style="max-height: 420px; overflow-y: auto;">
+                {% for m in conversation.messages.all %}
+                <div class="msg-bubble {% if m.sender == user %}msg-mine{% else %}msg-theirs{% endif %}">
+                    {{ m.body }}
+                    <div class="small opacity-75 mt-1">{{ m.created_at|date:"d M, H:i" }}</div>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center">No messages yet. Say hello!</p>
+                {% endfor %}
+            </div>
+            <form method="post" class="mt-3 d-flex gap-2">
+                {% csrf_token %}
+                {{ form.body }}
+                <button class="btn btn-brand">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

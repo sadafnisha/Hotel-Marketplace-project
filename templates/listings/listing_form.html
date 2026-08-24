@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} &mdash; HotelLease{% endblock %}
+{% block content %}
+<h3 class="section-title mb-3">{{ title }}</h3>
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="card hotel-card p-4 mb-3">
+        <h5>Basic Information</h5>
+        <div class="row g-3">
+            <div class="col-md-8">{{ form.title.label_tag }}{{ form.title }}</div>
+            <div class="col-md-4">{{ form.property_type.label_tag }}{{ form.property_type }}</div>
+            <div class="col-12">{{ form.description.label_tag }}{{ form.description }}</div>
+        </div>
+    </div>
+
+    <div class="card hotel-card p-4 mb-3">
+        <h5>Location</h5>
+        <div class="row g-3">
+            <div class="col-12">{{ form.address.label_tag }}{{ form.address }}</div>
+            <div class="col-md-4">{{ form.city.label_tag }}{{ form.city }}</div>
+            <div class="col-md-4">{{ form.state.label_tag }}{{ form.state }}</div>
+            <div class="col-md-4">{{ form.country.label_tag }}{{ form.country }}</div>
+            <div class="col-md-6">{{ form.latitude.label_tag }}{{ form.latitude }}</div>
+            <div class="col-md-6">{{ form.longitude.label_tag }}{{ form.longitude }}</div>
+        </div>
+    </div>
+
+    <div class="card hotel-card p-4 mb-3">
+        <h5>Property &amp; Operational Details</h5>
+        <div class="row g-3">
+            <div class="col-md-4">{{ form.rooms.label_tag }}{{ form.rooms }}</div>
+            <div class="col-md-4">{{ form.property_area_sqft.label_tag }}{{ form.property_area_sqft }}</div>
+            <div class="col-md-4">{{ form.years_in_operation.label_tag }}{{ form.years_in_operation }}</div>
+            <div class="col-md-6">{{ form.operational_status.label_tag }}{{ form.operational_status }}</div>
+            <div class="col-md-6">{{ form.ownership_type.label_tag }}{{ form.ownership_type }}</div>
+            <div class="col-12">{{ form.amenities.label_tag }}{{ form.amenities }}</div>
+        </div>
+    </div>
+
+    <div class="card hotel-card p-4 mb-3">
+        <h5>Lease &amp; Financials</h5>
+        <div class="row g-3">
+            <div class="col-md-4">{{ form.asking_amount.label_tag }}{{ form.asking_amount }}</div>
+            <div class="col-md-4">{{ form.security_deposit.label_tag }}{{ form.security_deposit }}</div>
+            <div class="col-md-4">{{ form.lease_duration_years.label_tag }}{{ form.lease_duration_years }}</div>
+            <div class="col-12">{{ form.renewal_terms.label_tag }}{{ form.renewal_terms }}</div>
+            <div class="col-md-6">{{ form.annual_revenue.label_tag }}{{ form.annual_revenue }}</div>
+            <div class="col-md-6">{{ form.annual_occupancy_rate.label_tag }}{{ form.annual_occupancy_rate }}</div>
+            <div class="col-md-6">{{ form.contact_preference.label_tag }}{{ form.contact_preference }}</div>
+        </div>
+    </div>
+
+    <div class="card hotel-card p-4 mb-3">
+        <h5>Images</h5>
+        {{ formset.management_form }}
+        <div class="row g-3">
+            {% for f in formset %}
+            <div class="col-md-4 border rounded p-2">
+                {{ f.image.label_tag }}{{ f.image }}
+                <div class="mt-2">{{ f.sort_order.label_tag }}{{ f.sort_order }}</div>
+                {% if f.instance.pk %}<div class="form-check mt-2">{{ f.DELETE }} <label class="form-check-label">Remove</label></div>{% endif %}
+                {{ f.id }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% for field in form %}{% for error in field.errors %}<div class="text-danger small">{{ field.label }}: {{ error }}</div>{% endfor %}{% endfor %}
+
+    <div class="d-flex gap-2">
+        <button type="submit" name="action" value="draft" class="btn btn-outline-secondary">Save as Draft</button>
+        <button type="submit" name="action" value="publish" class="btn btn-brand">Save &amp; Submit for Publishing</button>
+    </div>
+</form>
+{% endblock %}

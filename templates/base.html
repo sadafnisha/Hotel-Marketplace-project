@@ -1,0 +1,681 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}HotelLease Marketplace{% endblock %}</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Custom CSS -->
+   {% load static %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
+
+    <div class="container">
+
+        <!-- BRAND -->
+        <a
+            class="navbar-brand d-flex align-items-center gap-2"
+            href="{% url 'listings:marketplace' %}"
+        >
+
+            <span class="brand-icon">
+                <i class="bi bi-buildings-fill"></i>
+            </span>
+
+            <span class="brand-text">
+
+                <strong class="brand-name">
+                    HotelLease
+                </strong>
+
+                <small class="brand-subtitle">
+                    Marketplace
+                </small>
+
+            </span>
+
+        </a>
+
+
+        <!-- MOBILE MENU BUTTON -->
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <!-- NAVIGATION -->
+
+        <div
+            class="collapse navbar-collapse"
+            id="mainNavbar"
+        >
+
+            <!-- LEFT NAVIGATION -->
+
+            <ul class="navbar-nav me-auto mb-3 mb-lg-0 ms-lg-4">
+
+                <!-- Marketplace -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'listings:marketplace' %}"
+                    >
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Marketplace</span>
+                    </a>
+
+                </li>
+
+
+                {% if user.is_authenticated %}
+
+
+                    <!-- ================= OWNER ================= -->
+
+                    {% if user.is_owner %}
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'dashboard:owner' %}"
+                            >
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'listings:my_listings' %}"
+                            >
+                                <i class="bi bi-buildings"></i>
+                                <span>My Listings</span>
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'offers:received' %}"
+                            >
+                                <i class="bi bi-cash-stack"></i>
+                                <span>Offers</span>
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+
+                    <!-- ================= BUYER ================= -->
+
+                    {% if user.is_buyer %}
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'dashboard:buyer' %}"
+                            >
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'listings:saved' %}"
+                            >
+                                <i class="bi bi-heart-fill"></i>
+                                <span>Saved</span>
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'offers:my_offers' %}"
+                            >
+                                <i class="bi bi-file-earmark-text"></i>
+                                <span>My Offers</span>
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+
+                    <!-- ================= ADMIN ================= -->
+
+                    {% if user.is_platform_admin %}
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link admin-link"
+                                href="{% url 'dashboard:admin' %}"
+                            >
+                                <i class="bi bi-shield-check"></i>
+                                <span>Admin</span>
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+
+                    <!-- ================= MESSAGES ================= -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'chat:inbox' %}"
+                        >
+                            <i class="bi bi-chat-dots-fill"></i>
+                            <span>Messages</span>
+                        </a>
+
+                    </li>
+
+
+                {% endif %}
+
+            </ul>
+
+
+            <!-- =================================================
+                 RIGHT NAVIGATION
+            ================================================= -->
+
+            <ul class="navbar-nav align-items-lg-center">
+
+
+                {% if user.is_authenticated %}
+
+                    <!-- USER PROFILE -->
+
+                    <li class="nav-item dropdown">
+
+                        <a
+                            class="nav-link user-profile dropdown-toggle"
+                            href="#"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+
+                            <span class="user-avatar">
+                                {{ user.username|first|upper }}
+                            </span>
+
+                            <span class="user-name d-none d-lg-inline">
+                                {{ user.username }}
+                            </span>
+
+                        </a>
+
+
+                        <!-- PROFILE DROPDOWN -->
+
+                        <ul
+                            class="dropdown-menu dropdown-menu-end profile-dropdown"
+                        >
+
+                            <!-- User information -->
+
+                            <li>
+
+                                <div class="profile-header">
+
+                                    <span class="profile-avatar">
+                                        {{ user.username|first|upper }}
+                                    </span>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ user.username }}
+                                        </strong>
+
+                                        <small>
+                                            {% if user.is_owner %}
+                                                Hotel Owner
+                                            {% elif user.is_buyer %}
+                                                Buyer / Investor
+                                            {% elif user.is_platform_admin %}
+                                                Platform Admin
+                                            {% else %}
+                                                Member
+                                            {% endif %}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </li>
+
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+
+                            <!-- Profile -->
+
+                            <li>
+
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'accounts:profile' %}"
+                                >
+
+                                    <i class="bi bi-person-circle"></i>
+
+                                    <span>My Profile</span>
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- Messages -->
+
+                            <li>
+
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'chat:inbox' %}"
+                                >
+
+                                    <i class="bi bi-chat-left-text"></i>
+
+                                    <span>Messages</span>
+
+                                </a>
+
+                            </li>
+
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+
+                            <!-- Logout -->
+
+                            <li>
+
+                                <form
+                                    action="{% url 'accounts:logout' %}"
+                                    method="post"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="dropdown-item logout-item"
+                                    >
+
+                                        <i class="bi bi-box-arrow-right"></i>
+
+                                        <span>Logout</span>
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
+                {% else %}
+
+                    <!-- ================= GUEST ================= -->
+
+
+                    <!-- LOGIN -->
+
+                    <li class="nav-item me-lg-2 mb-2 mb-lg-0">
+
+                        <a
+                            class="btn btn-outline-light login-btn"
+                            href="{% url 'accounts:login' %}"
+                        >
+
+                            <i class="bi bi-box-arrow-in-right"></i>
+
+                            <span>Login</span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- REGISTER -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="btn register-btn"
+                            href="{% url 'accounts:register_choice' %}"
+                        >
+
+                            <i class="bi bi-person-plus-fill"></i>
+
+                            <span>Register</span>
+
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% if messages %}
+
+<div class="container message-container">
+
+    {% for message in messages %}
+
+        <div
+            class="alert alert-{{ message.tags }} alert-dismissible fade show custom-alert"
+            role="alert"
+        >
+
+            <div class="alert-content">
+
+                <span class="alert-icon">
+
+                    {% if message.tags == "success" %}
+                        <i class="bi bi-check-circle-fill"></i>
+
+                    {% elif message.tags == "error" %}
+                        <i class="bi bi-exclamation-circle-fill"></i>
+
+                    {% elif message.tags == "warning" %}
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+                    {% else %}
+                        <i class="bi bi-info-circle-fill"></i>
+                    {% endif %}
+
+                </span>
+
+                <span>
+                    {{ message }}
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <div class="container py-4">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="app-footer">
+
+    <div class="container">
+
+        <div class="row gy-4">
+
+
+            <!-- BRAND -->
+
+            <div class="col-lg-5">
+
+                <div class="footer-brand">
+
+                    <div class="footer-logo">
+
+                        <span class="footer-logo-icon">
+                            <i class="bi bi-buildings-fill"></i>
+                        </span>
+
+                        <span>
+                            HotelLease
+                        </span>
+
+                    </div>
+
+
+                    <p class="footer-description">
+
+                        A trusted marketplace connecting hotel owners
+                        with buyers and investors looking for
+                        leasing and investment opportunities.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PLATFORM -->
+
+            <div class="col-6 col-lg-3">
+
+                <h6>
+                    Platform
+                </h6>
+
+                <ul class="footer-links">
+
+                    <li>
+
+                        <a
+                            href="{% url 'listings:marketplace' %}"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                            Marketplace
+                        </a>
+
+                    </li>
+
+
+                    {% if user.is_authenticated %}
+
+                        <li>
+
+                            <a
+                                href="{% url 'chat:inbox' %}"
+                            >
+                                <i class="bi bi-chevron-right"></i>
+                                Messages
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="{% url 'accounts:profile' %}"
+                            >
+                                <i class="bi bi-chevron-right"></i>
+                                Profile
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+
+            </div>
+
+
+            <!-- WHY HOTELLEASE -->
+
+            <div class="col-6 col-lg-3">
+
+                <h6>
+                    Why HotelLease?
+                </h6>
+
+                <ul class="footer-links">
+
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Verified Listings
+                    </li>
+
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Direct Communication
+                    </li>
+
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Secure Offers
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <!-- DIVIDER -->
+
+        <hr class="footer-divider">
+
+
+        <!-- FOOTER BOTTOM -->
+
+        <div class="footer-bottom">
+
+            <small>
+                © {% now "Y" %} HotelLease Marketplace
+            </small>
+
+            <small>
+                Hotel leasing & investment platform
+            </small>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================================================
+     BOOTSTRAP JAVASCRIPT
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+{% if user.is_authenticated %}
+    {% include 'chat/_drawer.html' %}
+{% endif %}
+
+{% block extra_js %}
+{% endblock %}
+
+</body>
+</html>
